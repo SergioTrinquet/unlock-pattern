@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test canvas</title>
+    <link rel="stylesheet" href="css/style_V2.css">
+    <script src="js/index_V2.js" defer></script>
+</head>
+<body>
+    <div class="parametres-shema">
+        <select id="select-nb-points">
+            <option selected>Choisissez le nombre de points</option>
+        </select>
+        <div class="msg"></div>
+        <button id="deleteSchema">Supprimer le schéma enregistré</button>
+    </div>
+    <!-- VERSION ORIGiNALE -->
+    <!-- <div class="container" data-nb="3">
+        <canvas id="zone-canvas"></canvas>
+        <div class="grid-points"></div>
+    </div> -->
+
+
+    <!-- VERSION DE TEST POUR FLIPPING CARD -->
+     <div class="flip-card">
+        <div class="flip-card-inner">
+            <div class="container flip-card-front" data-nb="3"><!-- Pourquoi data-nb="3" ? -->
+                <canvas id="zone-canvas"></canvas>
+                <div class="grid-points"></div>
+            </div>
+            <div class="flip-card-back">
+                <div>
+                    <object id="iconCheckObj" type="image/svg+xml" data="svg/icon-check.svg"></object>
+                </div>
+            </div>
+        </div>
+     </div>
+
+
+<!-- TEST -->
+<!-- <object id="svgObj" type="image/svg+xml" data="svg/test.svg" width="200" height="100"></object>
+<br />
+<button onclick="lancerAnimation()">Lancer l'animation</button>
+<script>
+    function lancerAnimation() {
+      const svgDoc = document.getElementById("svgObj").contentDocument;
+      if (svgDoc) {
+        const anim = svgDoc.getElementById("anim1");
+        if (anim && typeof anim.beginElement === 'function') {
+          anim.beginElement();
+        }
+      }
+    }
+  </script> -->
+  <!-- FIN TEST -->
+
+
+    <!-- Fond sur pg d'accueil -->
+    <div class="squares-wrapper fade-in"></div>
+</body>
+</html>

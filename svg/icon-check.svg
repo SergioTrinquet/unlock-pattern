@@ -1,0 +1,39 @@
+<svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <circle id="circleCheckIcon"
+        cx="50" cy="50" r="40" 
+        fill="none" 
+        stroke="rgb(145, 255, 151)" 
+        stroke-width="10" 
+        stroke-dasharray="251.33"
+        stroke-dashoffset="251.33"
+        transform="rotate(-90 50 50)"
+    >
+        <animate id="animCircleCheckIcon" attributeName="stroke-dashoffset" from="251.33" to="0" dur="0.5s" fill="freeze" begin="indefinite" />
+    </circle>
+
+    <!-- Coche -->  
+    <g>
+        <line 
+            id="smallLineCheckIcon"
+            y1="47.93331" x1="30.36603" y2="64.99725" x2="46.21112" 
+            stroke-width="10" 
+            stroke="rgb(145, 255, 151)" 
+            fill="none"
+            stroke-dasharray="23.45"
+            stroke-dashoffset="23.45"
+        >
+            <animate id="animSmallLineCheckIcon" attributeName="stroke-dashoffset" from="23.45" to="0" begin="animCircleCheckIcon.end" dur="0.15s" fill="freeze" />
+        </line>
+        <line 
+            id="bigLineCheckIcon"
+            y1="64.8817" x1="39.02451" y2="40.01685" x2="68.21368" 
+            stroke-width="10" 
+            stroke="rgb(145, 255, 151)" 
+            fill="none"
+            stroke-dasharray="38.35"
+            stroke-dashoffset="38.35" 
+        >
+            <animate attributeName="stroke-dashoffset" from="38.35" to="0" begin="animSmallLineCheckIcon.end" dur="0.3s" fill="freeze" />
+        </line>
+    </g>
+</svg>

@@ -1,0 +1,132 @@
+:root {
+    --width-stroke: 6;
+    --color-stroke: rgb(255, 217, 217);
+
+    /*  Valeurs par défaut */
+    --nb-points-par-lgn-col: 3;
+    --nb-points: calc(var(--nb-points-par-lgn-col) * var(--nb-points-par-lgn-col));
+    /* --nb-points-par-ligne: var(--nb-points-par-lgn-col);
+    --nb-points-par-colonne: var(--nb-points-par-lgn-col); */
+
+    --diametre-point: 6;
+
+    --border-radius: 1vh;
+    --transition-time: 500;
+    --transition-time-in-ms: calc(var(--transition-time) * 1ms);
+
+    /* couleurs éléments */
+    --background-screen: #2b2a2a;
+    /* --background-container: #3d3d3d; */
+    --background-container: color-mix(in srgb, var(--background-screen) 85%, white);
+    --color-point: #fff;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    min-height: 100%;
+    font-size: 16px;
+}
+
+body {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    background-color: var(--background-screen);
+    grid-template-rows: 1fr 0fr;
+    transition: grid-template-rows var(--transition-time-in-ms) ease;
+}
+body:has(.grid-points:not(:empty)) {
+    grid-template-rows: 1fr 5fr;
+}
+
+.parametres-shema {
+    display: flex;
+    justify-content: center;
+    width: min(600px, 70dvh);
+    position: relative;
+}
+#select-nb-points {
+    border: none;
+    border-radius: var(--border-radius);
+    padding: .5rem 1rem;
+}
+.msg {
+    color: #fff;
+    position: absolute;
+    top: 6vh;
+}
+.parametres-shema:has(+ .container .grid-points:empty) .msg {
+    display: none;
+}
+
+.container {
+    position: relative;
+    width: max(60vmin, 400px);
+    height: max(60vmin, 400px);
+    box-shadow: 0 0 4px red; /* Juste pour test */
+    background-color: var(--background-container);
+    border-radius: var(--border-radius);
+    transition: height var(--transition-time-in-ms) ease, 
+                margin var(--transition-time-in-ms) ease,
+                padding var(--transition-time-in-ms) ease, 
+                opacity var(--transition-time-in-ms) ease;
+
+    &:has(> .grid-points:empty) {
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .grid-points {
+        display: grid;
+        grid-template-columns: repeat(var(--nb-points-par-lgn-col), 1fr);
+
+        div:not(.point) {
+            display: grid;
+            place-content: center;
+            aspect-ratio: 1;
+            .point {
+                width: calc(var(--diametre-point) * 1dvh);
+                aspect-ratio: 1;
+                border-radius: 50%; 
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                &:before {
+                    content: "";
+                    position: absolute;
+                    background-color: var(--color-point);
+                    border-radius: 50%;
+                    opacity: 0;
+                    width: 0;
+                    aspect-ratio: 1;
+                    transition: all .3s ease;
+                }
+                &:hover::before {
+                    opacity: .2;
+                    width: calc(var(--diametre-point) * 1dvh);
+                    aspect-ratio: 1;
+                    cursor: pointer;
+                }
+                &:after {
+                    content: "";
+                    position: absolute;
+                    border-radius: 50%;
+                    background-color: var(--color-point);
+                    width: calc((var(--diametre-point) * 1dvh) / 2);
+                    aspect-ratio: 1;
+                }
+            }
+        }
+    }
+}
+#zone-canvas {
+    position: absolute;
+    inset: 0;
+    box-shadow: 0 0 2px blue; /* TEST */
+}

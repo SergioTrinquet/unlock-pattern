@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 200 200"
+     width="200" height="200">
+  <circle class="dot" cx="40" cy="40" r="6"/>
+  <circle class="dot" cx="100" cy="40" r="6"/>
+  <circle class="dot" cx="160" cy="40" r="6"/>
+  <circle class="dot" cx="40" cy="100" r="6"/>
+  <circle class="dot" cx="100" cy="100" r="6"/>
+  <circle class="dot" cx="160" cy="100" r="6"/>
+  <circle class="dot" cx="40" cy="160" r="6"/>
+  <circle class="dot" cx="100" cy="160" r="6"/>
+  <circle class="dot" cx="160" cy="160" r="6"/>
+</svg>
+

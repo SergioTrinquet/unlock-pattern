@@ -3,10 +3,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test canvas</title>
-    <link rel="stylesheet" href="css/style_V2.css">
-    <script src="js/index_V2.js" defer></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/main.js" defer></script>
+    <!-- <script src="js/index_OLD.js" defer></script> -->
 </head>
 <body>
+    <div id="visualMsgTestMobile" style="position: absolute; top: 10px; left: 0; background: rgba(251, 1, 1, 0.8); color: #fff;z-index: 9999;">Nothing yet !</div><!-- A VIRER A LA FIN DES TESTS -->
+
+    <div id="controllerStroke" style="padding: 10px 15px; background-color: yellow; color: black; position: fixed; top: 20px; cursor: pointer;">Interrompre l'animation</div>
+
     <div class="parametres-shema">
         <select id="select-nb-points">
             <option selected>Choisissez le nombre de points</option>
@@ -14,14 +19,7 @@
         <div class="msg"></div>
         <button id="deleteSchema">Supprimer le schéma enregistré</button>
     </div>
-    <!-- VERSION ORIGiNALE -->
-    <!-- <div class="container" data-nb="3">
-        <canvas id="zone-canvas"></canvas>
-        <div class="grid-points"></div>
-    </div> -->
 
-
-    <!-- VERSION DE TEST POUR FLIPPING CARD -->
      <div class="flip-card">
         <div class="flip-card-inner">
             <div class="container flip-card-front" data-nb="3"><!-- Pourquoi data-nb="3" ? -->
@@ -36,26 +34,16 @@
         </div>
      </div>
 
-
-<!-- TEST -->
-<!-- <object id="svgObj" type="image/svg+xml" data="svg/test.svg" width="200" height="100"></object>
-<br />
-<button onclick="lancerAnimation()">Lancer l'animation</button>
-<script>
-    function lancerAnimation() {
-      const svgDoc = document.getElementById("svgObj").contentDocument;
-      if (svgDoc) {
-        const anim = svgDoc.getElementById("anim1");
-        if (anim && typeof anim.beginElement === 'function') {
-          anim.beginElement();
-        }
-      }
-    }
-  </script> -->
-  <!-- FIN TEST -->
-
-
     <!-- Fond sur pg d'accueil -->
     <div class="squares-wrapper fade-in"></div>
+
+
+    <!-- <svg width="0" height="0" viewBox="0 0 100 100">
+      <defs>
+        <clipPath id="clipPath" clipPathUnits="objectBoundingBox">
+          <path d="M 1,0.276 L 1,1 L 0,1 C 0.387333,-0.08333299999999999 0.530667,1.24867 1,0.276 Z"></path>
+        </clipPath>
+      </defs>
+    </svg> -->
 </body>
 </html>

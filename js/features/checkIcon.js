@@ -9,14 +9,8 @@ const svgCheck = {
         bigLine: null
     }
 
-export function svgSchemaInit() {
-    svgIconCheckObj?.addEventListener('load', () => { 
-        setColorToSVGcheck(); // Coloration elements SVG
-    }, false);
-}
-
 // Pour établir la couleur de l'icône SVG check
-function setColorToSVGcheck() {
+export function svgSchemaInit() {
     svgDoc = svgIconCheckObj.contentDocument;
     if(!svgDoc) return;
 

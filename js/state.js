@@ -2,7 +2,6 @@ import { STROKE } from "./constants.js";
 
 export const state = {
     root: document.documentElement,
-
     container: document.querySelector(".container"),
     canvas: document.querySelector("#zone-canvas"),
     boundingCanvas: null,
@@ -18,10 +17,9 @@ export const state = {
 
     isTouchScreen: window.matchMedia("(pointer:coarse)").matches,
 
-    msg: null,
-    animationMsg: null,
+    msg: document.querySelector(".msg"),
 
-    gridPoints: null,
+    gridPoints: document.querySelector(".grid-points"),
     currentSchemaNbDotsMinMax: {},
     nbDotsSelection: null,
     recordedSchema: false,

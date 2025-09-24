@@ -1,15 +1,12 @@
 import { state as s, reactiveState as rs } from "../state.js";
 import { DOT_CSS_CLASS_NAME } from "../constants.js";
 import { getComputedStyles, debounce, createEl } from "../core/utils.js";
-import { initSVGcheckAnimation, startSVGcheckAnimation } from "./svg_schema.js";
 import { isDrawingSchema, stopDrawingSchema, resetSchema, handlePointHover } from "./drawing.js";
-import { goBackToStartStep } from "./select.js";
 
 import { releasePointerCaptureOnTouchScreen } from "../main.js"; // EN COURS
 
 const transitionTime = getComputedStyles("--transition-time");
-const flipCard = document.querySelector(".flip-card");
-const flipCardBackChild = document.querySelector(".flip-card-back > div");
+let resizeHandler = null;
 
 function createDots() {
     for(var i = 0; i < s.nbDotsSelection; i++) {
@@ -59,7 +56,7 @@ export function frozenContainerGrid(isActive) {
 
 export function initGrid() {
     s.root.style.setProperty('--nb-points-par-lgn-col', Math.sqrt(s.nbDotsSelection)); // Affectation var CSS pour positionnement grille de points
-    createDots(); // Intégration points (selon l'option choisie ds le select)
+    createDots();
     frozenContainerGrid(true);
     setTimeout(() => {
         frozenContainerGrid(false);
@@ -71,11 +68,9 @@ function activationGrid() { console.log("%cactivationGrid()", "background-color:
     getCanvasSizeAndDotsCoord();
     
     /* ICI PROBLEME CAR CET Event reste ! */
-    s.EVENT_RESIZE += 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
-    window.addEventListener(
-      "resize",
-      debounce(() => getCanvasSizeAndDotsCoord(), 500)
-    );
+    /* s.EVENT_RESIZE += 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
+    let resizeHandler = debounce(() => getCanvasSizeAndDotsCoord(), 500);
+    window.addEventListener("resize", resizeHandler); */
 
     /* if(s.isTouchScreen) {
         s.container.addEventListener('pointerdown', (e) => {
@@ -91,11 +86,8 @@ function activationGrid() { console.log("%cactivationGrid()", "background-color:
 
 export function resetGrid() {
     /* ICI PROBLEME CAR CET Event reste ! */
-    s.EVENT_RESIZE -= 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
-    window.removeEventListener(
-        "resize",
-        debounce(() => getCanvasSizeAndDotsCoord(), 500)
-    );
+    /* s.EVENT_RESIZE -= 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
+    window.removeEventListener("resize", resizeHandler); */
 
     removeDots();
     resetSchema();
@@ -103,73 +95,6 @@ export function resetGrid() {
     s.container.removeEventListener('pointermove', isDrawingSchema); // Sert-il ?
     if(s.isTouchScreen) s.container.removeEventListener('pointerdown', releasePointerCaptureOnTouchScreen);
 }
-
-
-/// Sans doute mettre cette fonction ailleurs !
-/* VERSION ORIGINALE : Fonctionne !!! */ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-/* V2 TEST */
-/* function wait(ms) {
-  return new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(() => {
-        s.strokeController.abortController.signal?.removeEventListener("abort", onAbort);
-        resolve();
-    }, ms);
-
-    function onAbort() {
-        clearTimeout(timeoutId);
-        s.strokeController.abortController.signal?.removeEventListener("abort", onAbort);
-        reject(new Error("Aborted"));
-    }
-
-    if (s.strokeController.abortController.signal) {
-        s.strokeController.abortController.signal.addEventListener("abort", onAbort);
-    }
-  });
-} */
-/* FIN V2 TEST */
-
-export async function runSequenceSchemaValid() {
-    const SEQUENCE = {
-        stepCardFlip: 600,
-        stepAnimSVG: 1300,
-        stepDisplayMsgSuccess: 1000,
-        stepDelayBeforeMsgSuccessClose: 4000
-    };
-
-    // Étape 1
-    flipCard.classList.toggle("flip-over", true);
-    initSVGcheckAnimation();
-    await wait(SEQUENCE.stepCardFlip);
-
-    // Étape 2
-    startSVGcheckAnimation();
-    await wait(SEQUENCE.stepAnimSVG);
-
-    // Étape 3
-    flipCardBackChild.classList.toggle("grow-after-flip-over", true);
-    const msgSuccessClassName = "msg-success";
-    if(document.querySelector(`.${msgSuccessClassName}`)) document.querySelector(`.${msgSuccessClassName}`).remove();
-    let messageSuccess = createEl("div", { 
-            className: msgSuccessClassName, 
-            innerHTML: "<div>Accès authorisé!</div>" 
-    });
-    document.body.appendChild(messageSuccess);
-    await wait(SEQUENCE.stepDisplayMsgSuccess);
-
-    // Étape 4
-    goBackToStartStep();
-    flipCard.classList.toggle("flip-over", false);
-    flipCardBackChild.classList.toggle("grow-after-flip-over", false);
-
-    messageSuccess.addEventListener("click", () => { 
-        messageSuccess.classList.add("up");
-    }, { once: true });
-
-     await wait(SEQUENCE.stepDelayBeforeMsgSuccessClose);
-
-     messageSuccess.classList.add("up");
-}
-
 
 
 
@@ -180,13 +105,14 @@ rs.watch("isSelectOpen", newVal => {
     if(val !== newVal) {
         console.log("isSelectOpen a changé :", newVal);
         if(newVal) {
-            /* s.EVENT_RESIZE += 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
-            window.addEventListener("resize",  debounce(() => getCanvasSizeAndDotsCoord(), 500)); */
+            s.EVENT_RESIZE += 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
+            let resizeHandler = debounce(() => getCanvasSizeAndDotsCoord(), 500);
+            window.addEventListener("resize",  resizeHandler);
 
             s.container.addEventListener(s.isTouchScreen ? 'pointerup' : 'click', stopDrawingSchema);
         } else {
-            /* s.EVENT_RESIZE -= 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
-            window.removeEventListener("resize",  debounce(() => getCanvasSizeAndDotsCoord(), 500)); */
+            s.EVENT_RESIZE -= 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
+            window.removeEventListener("resize",  resizeHandler);
 
             s.container.removeEventListener(s.isTouchScreen ? 'pointerup' : 'click', stopDrawingSchema);
         }

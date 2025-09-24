@@ -1,7 +1,7 @@
 import { state as s } from "../state.js";
-import { ID_BUTTON_DRAW_SCHEMA } from "../constants.js";
+import { ID_BUTTON_DRAW_SCHEMA, STROKE } from "../constants.js";
 import { getComputedStyles } from "../core/utils.js";
-import { draw, removeSchemaDrawing } from "./drawing.js";
+import { draw, removeSchemaDrawing, colorationSchema } from "./drawing.js";
 import { setComplementaryInfos } from "./message.js";
 import { setCookie } from "./cookie.js";
 import { goBackToStartStep } from "./select.js";
@@ -9,22 +9,20 @@ import { goBackToStartStep } from "./select.js";
 const animationShrink = getComputedStyles("--animation-shrink");
 
 // Création de schéma : Gestion de clics de boutons pour valider/refaire le schéma 
-export function handleValidationButtonEvents() {
+export function handleValidationButtonClick() {
     s.msg.addEventListener("click", (e) => {
         const targetId = e.target.id;
         // Bouton "Refaire le schéma"
         if(targetId === ID_BUTTON_DRAW_SCHEMA.invalidate) {
             s.container.classList.add("vibrate");
-            s.strokeCurrentColor = "red"; // Coloration traits
-            draw();
- 
+            colorationSchema(true, STROKE.color.error);
             s.container.addEventListener("animationend", (e) => {
                 if (e.animationName === "vibrate") {
                     s.container.classList.remove("vibrate");
                     removeSchemaDrawing();  console.log("%c====================", "background-color: red; color: white"); //TEST
                     setComplementaryInfos();
                 }
-            });
+            }, { once: true });
             
         }
         // Bouton "Valider le schéma"

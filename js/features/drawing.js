@@ -3,11 +3,12 @@ import { state as s } from "../state.js";
 import { STROKES_COLORATION_SEQUENCE, STROKE } from "../constants.js";
 import { /* getComputedStyles,  */setCustomProperties } from "../core/utils.js";
 import { setComplementaryInfos } from "./message.js";
-import { checkSchemaValidity } from "./schemaValidity.js";
-import { frozenContainerGrid, runSequenceSchemaValid } from "./grid.js";
+// import { checkSchemaValidity } from "./schemaValidity.js";
+import { frozenContainerGrid } from "./grid.js";
 
 const ctx = s.canvas.getContext("2d");
 let coordStrokes = [];
+let animationSuccessModule, schemaValidityModule = null;
 
 setCustomProperties({
     '--color-stroke': STROKE.color.default,
@@ -122,14 +123,8 @@ async function flashSchema(isSchemaValid, controller) {
     try { 
         let i = 0;
         for (const step of sequence) {
-            // Couleur points
-            s.captureDots.forEach(cd => s.dots[cd].classList[STROKES_COLORATION_SEQUENCE[i].color ==="custom" ? "add" : "remove"](isSchemaValid ? "valid" : "error")); // Coloration points
+            colorationSchema(STROKES_COLORATION_SEQUENCE[i].color === "custom", step.color);
             i++;
-
-            // Couleur traits
-            s.strokeCurrentColor = step.color;
-            refreshCanvas();
-            draw();
             
             await delay(step.duration, abortController.signal);
         }
@@ -141,6 +136,23 @@ async function flashSchema(isSchemaValid, controller) {
         } else {
             throw err;
         }
+    }
+}
+
+export function colorationSchema(toggleClass, color) {
+    if(color === STROKE.color.valid || color === STROKE.color.error || color === STROKE.color.default) {
+        // Coloration points
+        s.captureDots.forEach(cd => {
+            let dotsClassList = s.dots[cd].classList;
+            dotsClassList.remove("valid", "error");
+            if(toggleClass) dotsClassList.add(color === STROKE.color.valid ? "valid" : "error");
+        });
+        // Coloration traits
+        s.strokeCurrentColor = color;
+
+        draw();
+    } else {
+        console.warn("Fonction colorationSchema: Mauvaise couleur demandée !!")
     }
 }
 
@@ -168,7 +180,10 @@ export async function stopDrawingSchema(e) {
         frozenContainerGrid(true);
 
         // Check si schéma bon ou pas pour coloration tracé ensuite
-        const isSchemaValid = checkSchemaValidity();
+        // const isSchemaValid = checkSchemaValidity();
+        if(!schemaValidityModule) schemaValidityModule = await import("./schemaValidity.js");
+        const isSchemaValid = schemaValidityModule.checkSchemaValidity();
+
         await flashSchema(isSchemaValid, strokeController);
         
         // Si phase de création de schéma + schéma tracé est valide, alors traits et coloration restent, sinon ils disparaissent
@@ -176,12 +191,14 @@ export async function stopDrawingSchema(e) {
             console.log("%c!!!!!! Schema Enregistré (valide ou pas valide) + Schema pas enr. ET pas valide !!!!!!", 'background-color: lightgreen; color: blue;'); //TEST
             removeSchemaDrawing();
         }
-        if(s.recordedSchema && isSchemaValid) runSequenceSchemaValid();
+        if(s.recordedSchema && isSchemaValid) { 
+            if (!animationSuccessModule) animationSuccessModule = await import("./animationSuccess.js");
+            animationSuccessModule.runSequenceSchemaValid();
+        } 
         
         console.log("%cO - Passage dans 'stopDrawingSchema' => FIN", 'color: red; font-size: larger'); //TEST
     }
 }
-
 
 
 // Pour effacer de la grille le dessin du schéma

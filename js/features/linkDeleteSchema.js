@@ -10,10 +10,10 @@ linkDeleteSchema.addEventListener("click", deleteRecordSchema);
 function deleteRecordSchema() {
     deleteCookie(s.nbDotsSelection);
     goBackToStartStep();
-    displayLinkDeleteRecordSchema(false);
+    displayLink(false);
 }
 
-export function displayLinkDeleteRecordSchema(val) {
+export function displayLink(val) {
   linkDeleteSchema.classList.toggle("display", val);
 }
 

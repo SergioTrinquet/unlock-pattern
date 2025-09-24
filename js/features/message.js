@@ -1,29 +1,35 @@
 import  { state as s } from "../state.js";
 import { MSG_LABELS, MSG_CSS_CLASS, ID_BUTTON_DRAW_SCHEMA } from "../constants.js";
-// import { handleValidationButtonEvents } from "../main.js"; // A CHANGER PLUS TARD !!!
-import { handleValidationButtonEvents } from "./buttonsValidation.js";
+import { getComputedStyles } from "../core/utils.js";
 
 const buttonsRecordSchema = `
 <button id="${ID_BUTTON_DRAW_SCHEMA.invalidate}">Refaire un schéma</button>
 <button id="${ID_BUTTON_DRAW_SCHEMA.validate}">Valider ce schéma</button>
 `;
 let lastMsg = "";
-let TEST_FLAG = false;
+let buttonsValidationModule = null;
+const animationMsg = getComputedStyles("--animation-msg");
+
 
 
 import { reactiveState as rs } from "../state.js";
-rs.watch("isSelectOpen", newVal => {
+let cookieModule = null; // FAIRE UNE SEULE VAR. GLOBALE DANS 'state.js' CAR EXISTE AUSSI DANS 'select.js'
+rs.watch("isSelectOpen", async newVal => {
   console.log("message.js => isSelectOpen a changé :", newVal); // TEST
   if(newVal) {
-    displayComplementaryInfos({text: `${s.recordedSchema ? MSG_LABELS.draw : MSG_LABELS.creation}`}); // Message sous le select
+    if(!cookieModule) cookieModule = await import("./cookie.js");
+    s.recordedSchema = cookieModule.isCookiePresent(s.nbDotsSelection);
+    displayComplementaryInfos({text: `${s.recordedSchema ? MSG_LABELS.draw : MSG_LABELS.creation}`});
   } else {
     removeComplementaryInfos();
   }
 });
+
+
+
 export function removeComplementaryInfos() {
     displayComplementaryInfos({text: ""});
 }
-
 
 export function displayComplementaryInfos(pm) {   // RETIRER LE EXPORT QUAND FINI   
     //console.log(pm, pm.className, "!!pm.className => ", !!pm.className, pm.anim); //TEST
@@ -32,9 +38,9 @@ export function displayComplementaryInfos(pm) {   // RETIRER LE EXPORT QUAND FIN
     if(flagAnimation) {
         msg.setAttribute("class", MSG_CSS_CLASS.default); // Réinitialisation classes
         msg.classList.toggle(MSG_CSS_CLASS.animation, true);
-        setTimeout(() => { msg.innerHTML = pm.text }, s.animationMsg / 2);
+        setTimeout(() => { msg.innerHTML = pm.text }, animationMsg / 2);
         if(!!pm.className) msg.classList.toggle(pm.className, true);
-        setTimeout(() => { msg.classList.toggle(MSG_CSS_CLASS.animation, false) }, s.animationMsg);
+        setTimeout(() => { msg.classList.toggle(MSG_CSS_CLASS.animation, false) }, animationMsg);
     } else {
         msg.innerHTML = pm.text; 
     }
@@ -58,7 +64,7 @@ export function setComplementaryInfos(calledFromClick) {
             }
             if(captureDotsLength >= currentSchemaNbDots.nbDotMin && captureDotsLength <= currentSchemaNbDots.nbDotMax) {
                 displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
-                if(!TEST_FLAG) { handleValidationButtonEvents(); TEST_FLAG = true; } //TEST
+                handleButtonsClick();
             }
         }
         // Msgs 'Schéma valide'
@@ -75,8 +81,16 @@ export function setComplementaryInfos(calledFromClick) {
             displayComplementaryInfos({text: MSG_LABELS.maxPointsReached, className: 'valid', anim: true});  
             setTimeout(() => {
                 displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
-                if(!TEST_FLAG) { handleValidationButtonEvents(); TEST_FLAG = true; } //TEST
+                handleButtonsClick();
             }, 1500);
         }
+    }
+}
+
+
+async function handleButtonsClick() {
+    if(!buttonsValidationModule) {
+        buttonsValidationModule = await import("./buttonsValidation.js");
+        buttonsValidationModule.handleValidationButtonClick();
     }
 }

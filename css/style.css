@@ -10,7 +10,14 @@
     --nb-points-par-lgn-col: 3;
     --nb-points: calc(var(--nb-points-par-lgn-col) * var(--nb-points-par-lgn-col));
 
-    --diametre-point: 6;
+    --diametre-point-hover: 6;
+    --diametre-point: calc(var(--diametre-point-hover) / 2);
+    @media screen and (max-width: 700px) and (pointer: fine) and (hover: hover) {
+        --diametre-point: calc((var(--diametre-point-hover) - 1) / 2);
+    }
+    @media screen and (max-width: 360px) {
+        --diametre-point: calc((var(--diametre-point-hover) - 2) / 2);
+    }
     /* FIN Valeurs par défaut */
 
     --border-radius: 1vh;
@@ -35,9 +42,9 @@
     /* squares part */
     --squares-opacity: 0.15;
     --nb-range: 4;
-    --time-animation-range-square-regular: /* 7 */ 28;
+    --time-animation-range-square-regular: 28;
     --time-animation-range-square-in-sec-regular: calc(var(--time-animation-range-square-regular) * 1s);
-    --time-animation-range-square-slow: /* 10 */ 43;
+    --time-animation-range-square-slow: 43;
     --time-animation-range-square-in-sec-slow: calc(var(--time-animation-range-square-slow) * 1s);
     --time-animation-range-square-hidden: 1.5;
     --time-animation-range-square-in-sec-hidden: calc(var(--time-animation-range-square-hidden) * 1s);
@@ -55,14 +62,30 @@
 }
 html {
     min-height: 100%;
-    font-size: 16px;
-}
-
-body {
     font-family: "Dosis", sans-serif;
     font-optical-sizing: auto;
     font-weight: 500;
     font-style: normal;
+    font-size: 16px;
+
+    @media screen and (orientation: landscape) and (pointer: coarse) and (hover: none) {
+        &:before {
+            z-index: 10000;
+            content: "Pour une meilleure expérience,\Aorientez votre appareil en mode portrait. \AMerci";
+            white-space: pre-wrap;
+            position: fixed;
+            background-color: #fff;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+    }
+}
+
+body {
     display: grid;
     align-items: center;
     justify-items: center;
@@ -155,6 +178,19 @@ body {
     position: relative;
     z-index: 1;
     animation: fadeInFromBottom 1s cubic-bezier(0.32, 0, 0.27, 0.97);
+
+    &:before {
+        content: "Schéma de verrouillage";
+        position: absolute;
+        font-size: clamp(1rem, 4vmin, 1.5rem);
+        color: var(--color-font);
+        translate: 0 -2em;
+        transition: opacity var(--transition-time-in-ms) ease;
+        opacity: 0;
+    }
+    &:has(~ .flip-card .grid-points:empty):before {
+        opacity: 1;
+    }
 }
 @keyframes fadeInFromBottom {
     0% {
@@ -170,7 +206,8 @@ body {
     border: none;
     border-radius: var(--border-radius);
     padding: .5rem 1rem;
-    box-shadow: 0 0 20px 0px rgba(255 255 255, 1);
+    box-shadow: 0 0 20px 0px rgba(255, 255, 255, 1);
+    text-align: center;
 }
 .msg {
     font-size: clamp(1rem, 4vmin, 1.5rem);
@@ -433,7 +470,7 @@ body, .container, .points {
             place-content: center;
             aspect-ratio: 1;
             .point {
-                width: calc(var(--diametre-point) * 1dvh);
+                width: calc(var(--diametre-point-hover) * 1dvh);
                 aspect-ratio: 1;
                 border-radius: 50%; 
                 position: relative;
@@ -452,7 +489,7 @@ body, .container, .points {
                 }
                 &:hover::before {
                     opacity: .2;
-                    width: calc(var(--diametre-point) * 1dvh);
+                    width: calc(var(--diametre-point-hover) * 1dvh);
                     aspect-ratio: 1;
                     cursor: pointer;
                 }
@@ -461,7 +498,7 @@ body, .container, .points {
                     position: absolute;
                     border-radius: 50%;
                     background-color: var(--color-point);
-                    width: calc((var(--diametre-point) * 1dvh) / 2);
+                    width: calc(var(--diametre-point) * 1dvh);
                     aspect-ratio: 1;
                 }
                 &.error:after {
@@ -499,6 +536,8 @@ body, .container, .points {
     animation: msgSuccessFadeIn 1s ease-in-out forwards;
     & > div {
         place-self: center;
+        text-align: center;
+        margin-inline: 5vw;
     }
     transition: translate 0.5s ease-in;
     &.up {

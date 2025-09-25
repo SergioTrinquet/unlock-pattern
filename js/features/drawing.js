@@ -3,8 +3,8 @@ import { state as s } from "../state.js";
 import { STROKES_COLORATION_SEQUENCE, STROKE } from "../constants.js";
 import { /* getComputedStyles,  */setCustomProperties } from "../core/utils.js";
 import { setComplementaryInfos } from "./message.js";
-// import { checkSchemaValidity } from "./schemaValidity.js";
 import { frozenContainerGrid } from "./grid.js";
+import { vibrateOnTouch } from "./mobile.js";
 
 const ctx = s.canvas.getContext("2d");
 let coordStrokes = [];
@@ -24,6 +24,7 @@ export function handlePointHover(e) {
     document.getElementById("visualMsgTestMobile").innerHTML = `POINTER HOVER A DOT: ${e.target.id} | pointer.id: ${e.pointerId}`; //TEST
     // if(s.isTouchScreen) releasePointerCaptureOnTouchScreen(e);
     
+    vibrateOnTouch(70);
     const idDot = e.target.getAttribute('data-num');
     if(!s.captureDots.includes(idDot)) {
         // Gestion Data pour le tracé
@@ -180,7 +181,6 @@ export async function stopDrawingSchema(e) {
         frozenContainerGrid(true);
 
         // Check si schéma bon ou pas pour coloration tracé ensuite
-        // const isSchemaValid = checkSchemaValidity();
         if(!schemaValidityModule) schemaValidityModule = await import("./schemaValidity.js");
         const isSchemaValid = schemaValidityModule.checkSchemaValidity();
 

@@ -2,8 +2,7 @@ import { state as s, reactiveState as rs } from "../state.js";
 import { DOT_CSS_CLASS_NAME } from "../constants.js";
 import { getComputedStyles, debounce, createEl } from "../core/utils.js";
 import { isDrawingSchema, stopDrawingSchema, resetSchema, handlePointHover } from "./drawing.js";
-
-import { releasePointerCaptureOnTouchScreen } from "../main.js"; // EN COURS
+import { releasePointerCaptureOnTouchScreen } from "./mobile.js";
 
 const transitionTime = getComputedStyles("--transition-time");
 let resizeHandler = null;
@@ -60,35 +59,21 @@ export function initGrid() {
     frozenContainerGrid(true);
     setTimeout(() => {
         frozenContainerGrid(false);
-        activationGrid();
+        getCanvasSizeAndDotsCoord();
+        /* if(s.isTouchScreen) {
+            s.container.addEventListener('pointerdown', (e) => {
+                document.getElementById("visualMsgTestMobile").innerHTML = `POINTER DOWN ON ${e.target.id} | pointer.id: ${e.pointerId}`; //TEST
+                //if(!e.isPrimary) return; // Pour mobile : On ne garde que le 1er pointeur (le doigt ou la souris) qui a fait le pointerdown
+                releasePointerCaptureOnTouchScreen(e);
+            });
+        } */
+        // ou
+        if(s.isTouchScreen) s.container.addEventListener('pointerdown', releasePointerCaptureOnTouchScreen);
     }, transitionTime);
-}
-
-function activationGrid() { console.log("%cactivationGrid()", "background-color: green; color: white"); //TEST
-    getCanvasSizeAndDotsCoord();
-    
-    /* ICI PROBLEME CAR CET Event reste ! */
-    /* s.EVENT_RESIZE += 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
-    let resizeHandler = debounce(() => getCanvasSizeAndDotsCoord(), 500);
-    window.addEventListener("resize", resizeHandler); */
-
-    /* if(s.isTouchScreen) {
-        s.container.addEventListener('pointerdown', (e) => {
-            document.getElementById("visualMsgTestMobile").innerHTML = `POINTER DOWN ON ${e.target.id} | pointer.id: ${e.pointerId}`; //TEST
-            //if(!e.isPrimary) return; // Pour mobile : On ne garde que le 1er pointeur (le doigt ou la souris) qui a fait le pointerdown
-            releasePointerCaptureOnTouchScreen(e);
-        });
-    } */
-    // ou
-    if(s.isTouchScreen) s.container.addEventListener('pointerdown', releasePointerCaptureOnTouchScreen);
 }
 
 
 export function resetGrid() {
-    /* ICI PROBLEME CAR CET Event reste ! */
-    /* s.EVENT_RESIZE -= 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
-    window.removeEventListener("resize", resizeHandler); */
-
     removeDots();
     resetSchema();
 
@@ -98,15 +83,14 @@ export function resetGrid() {
 
 
 
-
-/* EN TEST */
+/* EN COURS DE TEST */
 let val = null;
 rs.watch("isSelectOpen", newVal => {
     if(val !== newVal) {
         console.log("isSelectOpen a changé :", newVal);
         if(newVal) {
             s.EVENT_RESIZE += 1; console.log("s.EVENT_RESIZE: ", s.EVENT_RESIZE); // A VIRER
-            let resizeHandler = debounce(() => getCanvasSizeAndDotsCoord(), 500);
+            resizeHandler = debounce(() => getCanvasSizeAndDotsCoord(), 500);
             window.addEventListener("resize",  resizeHandler);
 
             s.container.addEventListener(s.isTouchScreen ? 'pointerup' : 'click', stopDrawingSchema);

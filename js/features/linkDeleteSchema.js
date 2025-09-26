@@ -8,7 +8,7 @@ export const linkDeleteSchema = document.querySelector("#deleteSchema");
 linkDeleteSchema.addEventListener("click", deleteRecordSchema);
 
 function deleteRecordSchema() {
-    deleteCookie(s.nbDotsSelection);
+    deleteCookie(s.selectedValueNbDots);
     goBackToStartStep();
     displayLink(false);
 }

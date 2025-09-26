@@ -20,6 +20,7 @@ export const MSG_LABELS = {
     notEnoughPoints: ": Pas assez de points !",
     maxPointsReached: "Nombre de points max. atteint"
 };
+export const COOKIE_NAME_PREFIX = "cookieSchema";
 export const MSG_CSS_CLASS = { 
     default: 'msg', 
     options: ['valid', 'invalid'], 
@@ -38,8 +39,8 @@ export const STROKES_COLORATION_SEQUENCE = [
 export const STROKE = {
     color:{
         default: "rgb(255, 217, 217)",
-        /* error: "rgb(255, 145, 145)", */ error: "rgba(255, 94, 94, 1)",
-        /* valid: "rgb(145, 255, 151)" */valid: "#4dfd4dff"
+        error: "rgba(255, 94, 94, 1)",
+        valid: "#4dfd4dff"
     },
     width: 6,
 };

@@ -36,7 +36,7 @@ export function handleValidationButtonClick() {
             s.gridPoints.addEventListener("animationend", () => {
                 s.gridPoints.classList.remove("pulse");
                 s.container.classList.add("shrink");
-                setCookie(s.nbDotsSelection, s.captureDots); // Création cookie
+                setCookie(s.selectedValueNbDots, s.captureDots); // Création cookie
 
                 console.log("%cFIN DE L'ANIMATION et creation cookie", "background-color: purple; color: yellow; font-style: italic"); //TEST
                 //s.gridPoints.removeEventListener("animationend", () => {});

@@ -18,7 +18,7 @@ rs.watch("isSelectOpen", async newVal => {
   console.log("message.js => isSelectOpen a changé :", newVal); // TEST
   if(newVal) {
     if(!cookieModule) cookieModule = await import("./cookie.js");
-    s.recordedSchema = cookieModule.isCookiePresent(s.nbDotsSelection);
+    s.recordedSchema = cookieModule.isCookiePresent(s.selectedValueNbDots);
     displayComplementaryInfos({text: `${s.recordedSchema ? MSG_LABELS.draw : MSG_LABELS.creation}`});
   } else {
     removeComplementaryInfos();

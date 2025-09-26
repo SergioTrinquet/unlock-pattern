@@ -15,24 +15,24 @@ export function selectInit() {
 }
 
 // Quand sélection liste déroulante...
-selectNbDots.addEventListener('change', selectNbDotsOnChange);
+selectNbDots.addEventListener('change', onChangeSelectNbDots);
 
-async function selectNbDotsOnChange() {
+async function onChangeSelectNbDots() {
     // Import dynamique des modules : Ne sont chargés que quand une 1ere selection est faite
     if(!cookieModule) cookieModule = await import("./cookie.js");
     if(!gridModule) gridModule = await import("./grid.js");
     if(!linkDeleteSchemaModule) linkDeleteSchemaModule = await import("./linkDeleteSchema.js");
 
-    s.nbDotsSelection = parseInt(selectNbDots.value);  
-    displaySquaresOnSelectChange(s.nbDotsSelection); //Squares background qui disparaissent/reapparaissent
+    s.selectedValueNbDots = parseInt(selectNbDots.value);  
+    displaySquaresOnSelectChange(s.selectedValueNbDots); //Squares background qui disparaissent/reapparaissent
     gridModule.resetGrid(); // Réinitialisation
 
     s.strokeController.abortController?.abort(); // Option avec interruption IMMEDIATE de l'animation sur le Flash de couleur sur le tracé du schéma s'il est présent
 
-    /* TEST pour var. réactive: Fonctionne! */rs.isSelectOpen = Number.isInteger(s.nbDotsSelection) ? true : false; 
+    /* TEST pour var. réactive: Fonctionne! */rs.isSelectOpen = Number.isInteger(s.selectedValueNbDots) ? true : false; 
 
-    if(Number.isInteger(s.nbDotsSelection)) {
-        s.recordedSchema = cookieModule.isCookiePresent(s.nbDotsSelection); // Test présence cookie
+    if(Number.isInteger(s.selectedValueNbDots)) {
+        s.recordedSchema = cookieModule.isCookiePresent(s.selectedValueNbDots); // Test présence cookie
         linkDeleteSchemaModule.displayLink(s.recordedSchema); // Pour faire aparaitre ou non le lien de suppression du schéma enregistré
         
         getCurrentGridConfig();
@@ -51,5 +51,5 @@ export function goBackToStartStep() {
 }
 
 function getCurrentGridConfig() {
-    s.currentSchemaNbDotsMinMax = !s.recordedSchema ? DOTS_SCHEMA_CONFIGS.find(d => (d.nbDotPerLC * d.nbDotPerLC) === s.nbDotsSelection) : {};
+    s.currentSchemaNbDotsMinMax = !s.recordedSchema ? DOTS_SCHEMA_CONFIGS.find(d => (d.nbDotPerLC * d.nbDotPerLC) === s.selectedValueNbDots) : {};
 }

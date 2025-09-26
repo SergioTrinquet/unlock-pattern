@@ -57,12 +57,12 @@ export function handlePointHover(e) {
         }
         
         // Si schéma enregistré mais ...
-        // console.log("s.captureDots.length", s.captureDots.length, "| s.nbDotsSelection", s.nbDotsSelection); //TEST
+        // console.log("s.captureDots.length", s.captureDots.length, "| s.selectedValueNbDots", s.selectedValueNbDots); //TEST
         if(s.recordedSchema) {
-            /* if(getCookie(s.nbDotsSelection) !== s.captureDots.join("")) { 
+            /* if(getCookie(s.selectedValueNbDots) !== s.captureDots.join("")) { 
                 // Faire apparaitre Icone Croix en svg animé !!
             } */
-            if(s.captureDots.length === s.nbDotsSelection) { 
+            if(s.captureDots.length === s.selectedValueNbDots) { 
                 stopDrawingSchema();
             }
         } 

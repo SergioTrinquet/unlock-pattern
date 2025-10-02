@@ -21,7 +21,7 @@
     /* FIN Valeurs par défaut */
 
     --border-radius: 1vh;
-    --grid-fading-transition-time: 5000;
+    --grid-fading-transition-time: 500;
     --grid-fading-transition-time-in-ms: calc(var(--grid-fading-transition-time) * 1ms);
 
     --animation-msg: 600;

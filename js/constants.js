@@ -30,7 +30,6 @@ export const ID_BUTTON_DRAW_SCHEMA = {
     invalidate: "btInvalidateSchema",
     validate: "btValidateSchema"
 }
-export const DOT_CSS_CLASS_NAME = "point";
 export const STROKES_COLORATION_SEQUENCE = [
     { color: "custom",  duration: 500 },
     { color: "default", duration: 300 },

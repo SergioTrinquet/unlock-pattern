@@ -1,29 +1,28 @@
 import { state as s, reactiveState as rs } from "../state.js";
-import { DOT_CSS_CLASS_NAME } from "../constants.js";
-import { getComputedStyles, debounce, createEl } from "../core/utils.js";
-import { isDrawingSchema, stopDrawingSchema, resetSchema, handlePointHover } from "./drawing.js";
+import { getComputedStyles, debounce, createEl, setCustomProperties } from "../core/utils.js";
+import { DOTS_SCHEMA_CONFIGS } from "../constants.js";
+import { isDrawingSchema, stopDrawingSchema, resetSchema, handleDotHover } from "./drawing.js";
 import { releasePointerCaptureOnTouchScreen } from "./mobile.js";
 
-const transitionTime = getComputedStyles("--transition-time");
+const transitionTime = getComputedStyles("--grid-fading-transition-time");
 let resizeHandler = null;
 
 function createDots() {
-    for(var i = 0; i < s.nbDotsSelection; i++) {
-        let dot = createEl("div", { 
-            id: `${DOT_CSS_CLASS_NAME}_${i}`, 
-            className: DOT_CSS_CLASS_NAME,
+    for(var i = 0; i < s.selectedValueNbDots; i++) {
+        let dot = createEl("div", {
+            className: "dot",
             "data-num": i,
         });
         let wrapperPoint = createEl("div");
         wrapperPoint.append(dot);
         s.gridPoints.append(wrapperPoint);
-        dot.addEventListener('pointerover', handlePointHover);
+        dot.addEventListener('pointerover', handleDotHover);
     }
 }
 
 function removeDots() {
-    s.gridPoints.querySelectorAll(`div:has(.${DOT_CSS_CLASS_NAME})`).forEach(p => {
-        p.removeEventListener('pointerover', handlePointHover);
+    s.gridPoints.querySelectorAll(`div:has(.dot)`).forEach(p => {
+        p.removeEventListener('pointerover', handleDotHover);
         p.remove();
     });
 }
@@ -35,8 +34,8 @@ function getCanvasSizeAndDotsCoord() {  console.log("%c---getCanvasSizeAndDotsCo
 
     // Get dots coordonates based on canvas
     s.dotsCoord = [];
-    s.dots = s.gridPoints.querySelectorAll(`.${DOT_CSS_CLASS_NAME}`);
-    // Calcul centre d'un element du DOM ".point'"
+    s.dots = s.gridPoints.querySelectorAll(`.dot`);
+    // Calcul centre d'un element du DOM ".dot'"
     const DotDistanceCenter = s.dots[0].getBoundingClientRect().width / 2;
 
     s.dots.forEach((dot, i) => {
@@ -46,7 +45,6 @@ function getCanvasSizeAndDotsCoord() {  console.log("%c---getCanvasSizeAndDotsCo
             "left": boundingDot.left - s.boundingCanvas.left + DotDistanceCenter
         });
     })
-    //console.log("s.dotsCoord: ", s.dotsCoord); //TEST
 }
 
 export function frozenContainerGrid(isActive) {
@@ -54,7 +52,8 @@ export function frozenContainerGrid(isActive) {
 }
 
 export function initGrid() {
-    s.root.style.setProperty('--nb-points-par-lgn-col', Math.sqrt(s.nbDotsSelection)); // Affectation var CSS pour positionnement grille de points
+    setCustomProperties({'--nb-points-par-lgn-col': Math.sqrt(s.selectedValueNbDots)}); // Affectation var CSS pour positionnement grille de points
+    getCurrentGridConfig();
     createDots();
     frozenContainerGrid(true);
     setTimeout(() => {
@@ -79,6 +78,10 @@ export function resetGrid() {
 
     s.container.removeEventListener('pointermove', isDrawingSchema); // Sert-il ?
     if(s.isTouchScreen) s.container.removeEventListener('pointerdown', releasePointerCaptureOnTouchScreen);
+}
+
+function getCurrentGridConfig() {
+    s.currentSchemaNbDotsMinMax = !s.recordedSchema ? (DOTS_SCHEMA_CONFIGS.find(d => (d.nbDotPerLC * d.nbDotPerLC) === s.selectedValueNbDots) || {}) : {};
 }
 
 

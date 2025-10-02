@@ -21,7 +21,7 @@ export const state = {
 
     gridPoints: document.querySelector(".grid-points"),
     currentSchemaNbDotsMinMax: {},
-    nbDotsSelection: null,
+    selectedValueNbDots: null,
     recordedSchema: false,
 
     strokeCurrentColor: STROKE.color.default,

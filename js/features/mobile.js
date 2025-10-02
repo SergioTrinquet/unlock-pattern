@@ -19,7 +19,7 @@ export function vibrateOnTouch(periodInMs = 100) {
     if ('vibrate' in navigator) navigator.vibrate(periodInMs);
 }
 
-// Fonction dédiée à la gestion des evenements propre au touch donc au mobile
+// Fonction dédiée à la gestion des evenements propre au touch
 export function releasePointerCaptureOnTouchScreen(e) {
     e.target.releasePointerCapture(e.pointerId);
 }

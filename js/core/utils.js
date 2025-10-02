@@ -7,10 +7,12 @@ export function getComputedStyles(customProperty) {
 }
 
 export function setCustomProperties(styles) {
+  if (Object.prototype.toString.call(styles) === '[object Object]') {
     const root = document.documentElement;
     for (const [property, value] of Object.entries(styles)) {
         root.style.setProperty(property, value);
     }
+  }
 }
 
 export function debounce(func, delay = DEFAULT_DEBOUNCE_DELAY) {
@@ -38,6 +40,31 @@ export function createEl(tagName, props = {}) {
     }
   }
   return el;
+}
+
+//// ==== EN COURS DE DEV. 24/09/2025 ====///
+export async function dynamicImportModule(moduleName, modulePath) {
+  /* return import(modulePath)
+    .then(module => {
+      console.log(`Module ${moduleName} loaded successfully`);
+      return module;
+    })
+    .catch(error => {
+      console.error(`Error loading module ${moduleName}:`, error);
+      throw error;
+    }); */
+    try {
+      if(!moduleName) {
+        const module = await import(modulePath);
+        console.log(`Module ${moduleName} loaded successfully`);
+        return module;
+        // ou 
+        // return await import(modulePath);
+      }
+    } catch (error) {
+      console.error(`Error loading module ${moduleName}:`, error);
+      throw error;
+    }
 }
 
 

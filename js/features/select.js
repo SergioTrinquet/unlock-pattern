@@ -34,8 +34,6 @@ async function onChangeSelectNbDots() {
     if(Number.isInteger(s.selectedValueNbDots)) {
         s.recordedSchema = cookieModule.isCookiePresent(s.selectedValueNbDots); // Test présence cookie
         linkDeleteSchemaModule.displayLink(s.recordedSchema); // Pour faire aparaitre ou non le lien de suppression du schéma enregistré
-        
-        getCurrentGridConfig();
         // displayComplementaryInfos({text: `${s.recordedSchema ? MSG_LABELS.draw : MSG_LABELS.creation}`}); // Message sous le select
         gridModule.initGrid();
     } else {
@@ -48,8 +46,4 @@ async function onChangeSelectNbDots() {
 export function goBackToStartStep() {
     selectNbDots.options[0].selected = true;
     selectNbDots.dispatchEvent(new Event('change'));
-}
-
-function getCurrentGridConfig() {
-    s.currentSchemaNbDotsMinMax = !s.recordedSchema ? DOTS_SCHEMA_CONFIGS.find(d => (d.nbDotPerLC * d.nbDotPerLC) === s.selectedValueNbDots) : {};
 }

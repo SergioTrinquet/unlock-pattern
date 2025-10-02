@@ -19,8 +19,7 @@ setCustomProperties({
 
 // Gestion du survol des points pour tracer le schéma
 // Au survol d'un point, on dessine un trait entre le dernier point et celui-ci
-export function handlePointHover(e) {  
-    console.log("POINTER HOVER A DOT", e); //TEST
+export function handleDotHover(e) {  
     document.getElementById("visualMsgTestMobile").innerHTML = `POINTER HOVER A DOT: ${e.target.id} | pointer.id: ${e.pointerId}`; //TEST
     // if(s.isTouchScreen) releasePointerCaptureOnTouchScreen(e);
     
@@ -57,7 +56,6 @@ export function handlePointHover(e) {
         }
         
         // Si schéma enregistré mais ...
-        // console.log("s.captureDots.length", s.captureDots.length, "| s.selectedValueNbDots", s.selectedValueNbDots); //TEST
         if(s.recordedSchema) {
             /* if(getCookie(s.selectedValueNbDots) !== s.captureDots.join("")) { 
                 // Faire apparaitre Icone Croix en svg animé !!

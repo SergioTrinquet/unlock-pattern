@@ -7,22 +7,15 @@ Liste bugs:
 
 Liste notes:
 1 - Ajouter une animation sur lien "supprimer le schéma enregistré"
-3 - Signifier dans le select quand un schéma est déjà enregistré
-4 - Faire une animation (du genre anim 3D avec grille qui pivote sur son axe vertical) (sans remettre le select au centre!) quand on passe de grille de 9 points à grille de 16 points, et inversement
-5 - Quand resize de la fenetre, il y a un delai pour le redimentionnement/repositionnement des elements qui constituent la grille (fond, points) => Voir ce que l'on peut faire!
-6 - Ajouter l'API mobile pour faire vibrer qd on survole un point
-7 - Voir si on peut colorer interface du navigateur pour ressembler au fond de l'app
+2 - Signifier dans le select quand un schéma est déjà enregistré
+3 - Faire une animation (du genre anim 3D avec grille qui pivote sur son axe vertical) (sans remettre le select au centre!) quand on passe de grille de 9 points à grille de 16 points, et inversement
+4 - Quand resize de la fenetre, il y a un delai pour le redimentionnement/repositionnement des elements qui constituent la grille (fond, points) => Voir ce que l'on peut faire!
+5 - Voir si on peut colorer interface du navigateur pour ressembler au fond de l'app
 */
 
 backgroundSquaresInit();
 selectInit();
 
-
-    
-// Fonction dédiée à la gestion des evenements propre au touch donc au mobile
-export function releasePointerCaptureOnTouchScreen(e) {
-    e.target.releasePointerCapture(e.pointerId);
-}
 
 
 // ======= NE FONCTIONNE PAS ! ======//

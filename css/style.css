@@ -498,7 +498,7 @@ body, .container, .points {
         }
     }
 }
-#zone-canvas {
+canvas {
     position: absolute;
     inset: 0;
 }

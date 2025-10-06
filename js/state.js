@@ -3,7 +3,7 @@ import { STROKE } from "./constants.js";
 export const state = {
     root: document.documentElement,
     container: document.querySelector(".container"),
-    canvas: document.querySelector("#zone-canvas"),
+    canvas: document.querySelector("canvas"),
     boundingCanvas: null,
 
     dots: null,

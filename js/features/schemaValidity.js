@@ -6,11 +6,11 @@ export function checkSchemaValidity() {
     let validSchema = false;
     if(!s.recordedSchema) {
         // Check si nb saisie points est bien entre nb min et nb max 
-        if(s.captureDots.length < s.currentSchemaNbDotsMinMax.nbDotMin || s.captureDots.length > s.currentSchemaNbDotsMinMax.nbDotMax) { validSchema = false }
-        if(s.captureDots.length >= s.currentSchemaNbDotsMinMax.nbDotMin && s.captureDots.length <= s.currentSchemaNbDotsMinMax.nbDotMax) { validSchema = true }
+        if(s.capturedDots.length < s.currentSchemaNbDotsMinMax.nbDotMin || s.capturedDots.length > s.currentSchemaNbDotsMinMax.nbDotMax) { validSchema = false }
+        if(s.capturedDots.length >= s.currentSchemaNbDotsMinMax.nbDotMin && s.capturedDots.length <= s.currentSchemaNbDotsMinMax.nbDotMax) { validSchema = true }
     } else { 
         // Check si saisie points correspond à valeur cookie
-        validSchema = JSON.parse(getCookieValue(`${COOKIE_NAME_PREFIX}${s.selectedValueNbDots}`))?.combination.join(",") === s.captureDots.join(",") 
+        validSchema = JSON.parse(getCookieValue(`${COOKIE_NAME_PREFIX}${s.selectedValueNbDots}`))?.combination.join(",") === s.capturedDots.join(",") 
         ? true 
         : false;
     }

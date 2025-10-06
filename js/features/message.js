@@ -49,35 +49,35 @@ export function displayComplementaryInfos(pm) {   // RETIRER LE EXPORT QUAND FIN
 
 export function setComplementaryInfos(calledFromClick) {  
     //console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
-    if(!s.recordedSchema) {   //console.log("Pas de schéma enregistré !!","s.captureDots.length: " , s.captureDots.length, "| currentSchemaNbDotsMinMax.nbDotMin: ", s.currentSchemaNbDotsMinMax.nbDotMin, " | currentSchemaNbDotsMinMax.nbDotMax: ", s.currentSchemaNbDotsMinMax.nbDotMax); //TEST
-        const captureDotsLength = s.captureDots.length;
+    if(!s.recordedSchema) {   //console.log("Pas de schéma enregistré !!","s.capturedDots.length: " , s.capturedDots.length, "| currentSchemaNbDotsMinMax.nbDotMin: ", s.currentSchemaNbDotsMinMax.nbDotMin, " | currentSchemaNbDotsMinMax.nbDotMax: ", s.currentSchemaNbDotsMinMax.nbDotMax); //TEST
+        const capturedDotsLength = s.capturedDots.length;
         const currentSchemaNbDots = s.currentSchemaNbDotsMinMax;
 
-        if(!captureDotsLength) displayComplementaryInfos({text: MSG_LABELS.creation, anim: true});
+        if(!capturedDotsLength) displayComplementaryInfos({text: MSG_LABELS.creation, anim: true});
 
         if(calledFromClick) {
-            if(captureDotsLength < currentSchemaNbDots.nbDotMin) {
+            if(capturedDotsLength < currentSchemaNbDots.nbDotMin) {
                 displayComplementaryInfos({text: `${MSG_LABELS.invalid}${MSG_LABELS.notEnoughPoints}`, className: 'invalid', anim: true});
                 setTimeout(() => {
                     displayComplementaryInfos({text: MSG_LABELS.creation, anim: true});
                 }, 2000);
             }
-            if(captureDotsLength >= currentSchemaNbDots.nbDotMin && captureDotsLength <= currentSchemaNbDots.nbDotMax) {
+            if(capturedDotsLength >= currentSchemaNbDots.nbDotMin && capturedDotsLength <= currentSchemaNbDots.nbDotMax) {
                 displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
                 handleButtonsClick();
             }
         }
         // Msgs 'Schéma valide'
         if(
-            captureDotsLength >= currentSchemaNbDots.nbDotMin && 
-            captureDotsLength <= currentSchemaNbDots.nbDotMax && 
+            capturedDotsLength >= currentSchemaNbDots.nbDotMin && 
+            capturedDotsLength <= currentSchemaNbDots.nbDotMax && 
             lastMsg !== MSG_LABELS.valid
         ) {    
             displayComplementaryInfos({text: MSG_LABELS.valid, className: 'valid', anim: true});
             lastMsg = MSG_LABELS.valid;
         } 
 
-        if(captureDotsLength === currentSchemaNbDots.nbDotMax) {
+        if(capturedDotsLength === currentSchemaNbDots.nbDotMax) {
             displayComplementaryInfos({text: MSG_LABELS.maxPointsReached, className: 'valid', anim: true});  
             setTimeout(() => {
                 displayComplementaryInfos({text: buttonsRecordSchema, anim: true});

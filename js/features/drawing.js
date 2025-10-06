@@ -25,16 +25,16 @@ export function handleDotHover(e) {
     
     vibrateOnTouch(70);
     const idDot = e.target.getAttribute('data-num');
-    if(!s.captureDots.includes(idDot)) {
+    if(!s.capturedDots.includes(idDot)) {
         // Gestion Data pour le tracé
         // Il faut alimenter 'coordStrokes' avec des objets comportant point début et point fin
         const actualSegment = {
             start: { x: s.dotsCoord[idDot].left, y: s.dotsCoord[idDot].top },
             end: { x: null, y: null }
         }
-        if(s.captureDots.length > 0) {
+        if(s.capturedDots.length > 0) {
             coordStrokes.pop();
-            const previousIdDot = parseInt(s.captureDots[s.captureDots.length - 1]);     
+            const previousIdDot = parseInt(s.capturedDots[s.capturedDots.length - 1]);     
             const previousSegment = {
                 start: { x: s.dotsCoord[previousIdDot].left, y: s.dotsCoord[previousIdDot].top },
                 end: { x: s.dotsCoord[idDot].left, y: s.dotsCoord[idDot].top }
@@ -45,22 +45,22 @@ export function handleDotHover(e) {
             s.container.addEventListener('pointermove', isDrawingSchema);
         }
 
-        s.captureDots.push(idDot);  console.log("s.captureDots: ", s.captureDots); //TEST
+        s.capturedDots.push(idDot);  console.log("s.capturedDots: ", s.capturedDots); //TEST
 
 
         ////// EN COURS ///////
         // Si pas de schéma encore enregistré et que nb de points max atteint
         if(!s.recordedSchema) {
-            if(s.captureDots.length === s.currentSchemaNbDotsMinMax.nbDotMax) stopDrawingSchema();
+            if(s.capturedDots.length === s.currentSchemaNbDotsMinMax.nbDotMax) stopDrawingSchema();
             setComplementaryInfos();
         }
         
         // Si schéma enregistré mais ...
         if(s.recordedSchema) {
-            /* if(getCookie(s.selectedValueNbDots) !== s.captureDots.join("")) { 
+            /* if(getCookie(s.selectedValueNbDots) !== s.capturedDots.join("")) { 
                 // Faire apparaitre Icone Croix en svg animé !!
             } */
-            if(s.captureDots.length === s.selectedValueNbDots) { 
+            if(s.capturedDots.length === s.selectedValueNbDots) { 
                 stopDrawingSchema();
             }
         } 
@@ -130,7 +130,7 @@ async function flashSchema(isSchemaValid, controller) {
     } catch (err) {
         if (err.message === "Aborted") {
             // Animation interrompue immédiatement
-            console.log("%cAnimation annulée : coordStrokes => ", 'background-color: red; color: white;', coordStrokes, " | s.captureDots => ", s.captureDots);
+            console.log("%cAnimation annulée : coordStrokes => ", 'background-color: red; color: white;', coordStrokes, " | s.capturedDots => ", s.capturedDots);
             removeSchemaDrawing();
         } else {
             throw err;
@@ -141,7 +141,7 @@ async function flashSchema(isSchemaValid, controller) {
 export function colorationSchema(toggleClass, color) {
     if(color === STROKE.color.valid || color === STROKE.color.error || color === STROKE.color.default) {
         // Coloration points
-        s.captureDots.forEach(cd => {
+        s.capturedDots.forEach(cd => {
             let dotsClassList = s.dots[cd].classList;
             dotsClassList.remove("valid", "error");
             if(toggleClass) dotsClassList.add(color === STROKE.color.valid ? "valid" : "error");
@@ -165,7 +165,7 @@ document.querySelector("#controllerStroke").addEventListener("click", () => {
 export async function stopDrawingSchema(e) {  
     //console.log("event >>>>", e?.type); //TEST
     console.log("%cO - Passage dans 'stopDrawingSchema' => DEBUT", 'color: red; font-size: larger'); //TEST
-    if(s.captureDots.length) { // Si tracé existe
+    if(s.capturedDots.length) { // Si tracé existe
         s.container.removeEventListener('pointermove', isDrawingSchema); // Suppression evenement sinon continue à dessiner quand souris bouge
     
         // Mise à jour tracé : Dessin sans le dernier segment
@@ -202,7 +202,7 @@ export async function stopDrawingSchema(e) {
 // Pour effacer de la grille le dessin du schéma
 export function removeSchemaDrawing() {
     // Réinitialisation couleur points et tracé
-    s.captureDots.forEach(cd => s.dots[cd].classList.remove("valid", "error"));
+    s.capturedDots.forEach(cd => s.dots[cd].classList.remove("valid", "error"));
     resetSchema();
     // Réactivation events sur container pour dessiner
     frozenContainerGrid(false);
@@ -213,7 +213,7 @@ export function removeSchemaDrawing() {
 export function resetSchema() {
     refreshCanvas();
     coordStrokes = []; // Réinitialisation coord.
-    s.captureDots = []; // Réinitialisation data points survolés
+    s.capturedDots = []; // Réinitialisation data points survolés
     s.strokeCurrentColor = STROKE.color.default; // Trait schéma avec couleur par défaut
 }
 

@@ -7,7 +7,7 @@ export const state = {
     boundingCanvas: null,
 
     dots: null,
-    captureDots: [],
+    capturedDots: [],
     dotsCoord: [],
     /* dots: {
         dom: null,

@@ -23,7 +23,7 @@ export const MSG_LABELS = {
 export const COOKIE_NAME_PREFIX = "cookieSchema";
 export const MSG_CSS_CLASS = { 
     default: 'msg', 
-    options: ['valid', 'invalid'], 
+    options: ['valid', 'invalid'], // ICI, A VIRER CAR PAS UTILISE ET METTRE 2 PROPRIETES valid ET invalid OU valid ET error CALQUÉES SUR SCHEMA_ELEMENTS_COLOR_CLASS
     animation: 'anim-up'
 };
 export const ID_BUTTON_DRAW_SCHEMA = {
@@ -49,3 +49,8 @@ export const STROKE = {
     },
     width: 6,
 };
+
+export const DELAY_TO_DISPLAY = {
+    labelAfterNotEnoughDots: 2000,
+    buttonsAfterValidSchema: 1500
+}

@@ -1,5 +1,5 @@
 import  { state as s } from "../state.js";
-import { MSG_LABELS, MSG_CSS_CLASS, ID_BUTTON_DRAW_SCHEMA } from "../constants.js";
+import { MSG_LABELS, MSG_CSS_CLASS, ID_BUTTON_DRAW_SCHEMA, DELAY_TO_DISPLAY } from "../constants.js";
 import { getComputedStyles } from "../core/utils.js";
 
 const buttonsRecordSchema = `
@@ -19,7 +19,7 @@ rs.watch("isSelectOpen", async newVal => {
   if(newVal) {
     if(!cookieModule) cookieModule = await import("./cookie.js");
     s.recordedSchema = cookieModule.isCookiePresent(s.selectedValueNbDots);
-    displayComplementaryInfos({text: `${s.recordedSchema ? MSG_LABELS.draw : MSG_LABELS.creation}`});
+    setComplementaryInfos();
   } else {
     removeComplementaryInfos();
   }
@@ -48,19 +48,20 @@ export function displayComplementaryInfos(pm) {   // RETIRER LE EXPORT QUAND FIN
 
 
 export function setComplementaryInfos(calledFromClick) {  
-    //console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
+    console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
+    
+    const capturedDotsLength = s.capturedDots.length;
+    // Qd on vient de sélectionner une Grid et que donc pas de points capturés
+    if(!capturedDotsLength) displayComplementaryInfos({text: `${s.recordedSchema ? MSG_LABELS.draw : MSG_LABELS.creation}`, anim: true});
+
     if(!s.recordedSchema) {   //console.log("Pas de schéma enregistré !!","s.capturedDots.length: " , s.capturedDots.length, "| currentSchemaNbDotsMinMax.nbDotMin: ", s.currentSchemaNbDotsMinMax.nbDotMin, " | currentSchemaNbDotsMinMax.nbDotMax: ", s.currentSchemaNbDotsMinMax.nbDotMax); //TEST
-        const capturedDotsLength = s.capturedDots.length;
         const currentSchemaNbDots = s.currentSchemaNbDotsMinMax;
-
-        if(!capturedDotsLength) displayComplementaryInfos({text: MSG_LABELS.creation, anim: true});
-
         if(calledFromClick) {
             if(capturedDotsLength < currentSchemaNbDots.nbDotMin) {
                 displayComplementaryInfos({text: `${MSG_LABELS.invalid}${MSG_LABELS.notEnoughPoints}`, className: 'invalid', anim: true});
                 setTimeout(() => {
                     displayComplementaryInfos({text: MSG_LABELS.creation, anim: true});
-                }, 2000);
+                }, DELAY_TO_DISPLAY.labelAfterNotEnoughDots);
             }
             if(capturedDotsLength >= currentSchemaNbDots.nbDotMin && capturedDotsLength <= currentSchemaNbDots.nbDotMax) {
                 displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
@@ -82,7 +83,7 @@ export function setComplementaryInfos(calledFromClick) {
             setTimeout(() => {
                 displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
                 handleButtonsClick();
-            }, 1500);
+            }, DELAY_TO_DISPLAY.buttonsAfterValidSchema);
         }
     }
 }

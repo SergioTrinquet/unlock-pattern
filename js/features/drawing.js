@@ -1,6 +1,6 @@
 
 import { state as s } from "../state.js";
-import { STROKES_COLORATION_SEQUENCE, STROKE } from "../constants.js";
+import { STROKES_COLORATION_SEQUENCE, STROKE, SCHEMA_ELEMENTS_COLOR_CLASS } from "../constants.js";
 import { /* getComputedStyles,  */setCustomProperties } from "../core/utils.js";
 import { setComplementaryInfos } from "./message.js";
 import { frozenContainerGrid } from "./grid.js";
@@ -26,8 +26,7 @@ export function handleDotHover(e) {
     vibrateOnTouch(70);
     const idDot = e.target.getAttribute('data-num');
     if(!s.capturedDots.includes(idDot)) {
-        // Gestion Data pour le tracé
-        // Il faut alimenter 'coordStrokes' avec des objets comportant point début et point fin
+        // Gestion tracé : Il faut alimenter 'coordStrokes' avec des objets comportant point début et point fin
         const actualSegment = {
             start: { x: s.dotsCoord[idDot].left, y: s.dotsCoord[idDot].top },
             end: { x: null, y: null }
@@ -48,27 +47,21 @@ export function handleDotHover(e) {
         s.capturedDots.push(idDot);  console.log("s.capturedDots: ", s.capturedDots); //TEST
 
 
-        ////// EN COURS ///////
         // Si pas de schéma encore enregistré et que nb de points max atteint
         if(!s.recordedSchema) {
             if(s.capturedDots.length === s.currentSchemaNbDotsMinMax.nbDotMax) stopDrawingSchema();
             setComplementaryInfos();
         }
-        
-        // Si schéma enregistré mais ...
+        // Si schéma enregistré...
         if(s.recordedSchema) {
             /* if(getCookie(s.selectedValueNbDots) !== s.capturedDots.join("")) { 
                 // Faire apparaitre Icone Croix en svg animé !!
             } */
-            if(s.capturedDots.length === s.selectedValueNbDots) { 
-                stopDrawingSchema();
-            }
+            if(s.capturedDots.length === s.selectedValueNbDots) stopDrawingSchema();
         } 
-        ////// FIN EN COURS ///////
 
     }
 }
-
 
 
 export function isDrawingSchema(e) { 
@@ -78,9 +71,9 @@ export function isDrawingSchema(e) {
     // if(!e.isPrimary) return; // Pour mobile : On ne garde que le 1er pointeur (le doigt ou la souris) qui a fait le pointerdown
     // if(s.isTouchScreen) releasePointerCaptureOnTouchScreen(e); // Juste pour mobile : Expliquer pourquoi c'est necessaire (n'ecoute que les évènements sur l'element qui a eu le pointerdown en 1er)
 
-    const cursorPosinCanvas = getCursorPositionOnCanvas(e);
+    const cursorPositionInCanvas = getCursorPositionOnCanvas(e);
     // Ajout cordonnées du curseur sur fin dernier segment du schema
-    coordStrokes[coordStrokes.length - 1].end = { x: cursorPosinCanvas.x, y: cursorPosinCanvas.y };
+    coordStrokes[coordStrokes.length - 1].end = { x: cursorPositionInCanvas.x, y: cursorPositionInCanvas.y };
     refreshCanvas();
     draw();
 }
@@ -115,8 +108,8 @@ async function flashSchema(isSchemaValid, controller) {
     controller.abortController = abortController;
 
     const sequence = STROKES_COLORATION_SEQUENCE.map(p => ({
-        ...p, // copie les propriétés
-        color: (p.color === "custom" ? (isSchemaValid ? STROKE.color.valid : STROKE.color.error) : STROKE.color.default) // écrase la valeur
+      ...p, // copie les propriétés
+      color: (p.color === "custom" ? (isSchemaValid ? SCHEMA_ELEMENTS_COLOR_CLASS.valid : SCHEMA_ELEMENTS_COLOR_CLASS.error) : SCHEMA_ELEMENTS_COLOR_CLASS.default) // écrase la valeur
     }));
 
     try { 
@@ -139,15 +132,15 @@ async function flashSchema(isSchemaValid, controller) {
 }
 
 export function colorationSchema(toggleClass, color) {
-    if(color === STROKE.color.valid || color === STROKE.color.error || color === STROKE.color.default) {
+    if(color === SCHEMA_ELEMENTS_COLOR_CLASS.valid || color === SCHEMA_ELEMENTS_COLOR_CLASS.error || color === SCHEMA_ELEMENTS_COLOR_CLASS.default) {
         // Coloration points
         s.capturedDots.forEach(cd => {
             let dotsClassList = s.dots[cd].classList;
-            dotsClassList.remove("valid", "error");
-            if(toggleClass) dotsClassList.add(color === STROKE.color.valid ? "valid" : "error");
+            dotsClassList.remove(SCHEMA_ELEMENTS_COLOR_CLASS.valid, SCHEMA_ELEMENTS_COLOR_CLASS.error);
+            if(toggleClass) dotsClassList.add(color);
         });
         // Coloration traits
-        s.strokeCurrentColor = color;
+        s.strokeCurrentColor = STROKE.color[color];
 
         draw();
     } else {
@@ -202,7 +195,7 @@ export async function stopDrawingSchema(e) {
 // Pour effacer de la grille le dessin du schéma
 export function removeSchemaDrawing() {
     // Réinitialisation couleur points et tracé
-    s.capturedDots.forEach(cd => s.dots[cd].classList.remove("valid", "error"));
+    s.capturedDots.forEach(cd => s.dots[cd].classList.remove(SCHEMA_ELEMENTS_COLOR_CLASS.valid, SCHEMA_ELEMENTS_COLOR_CLASS.error));
     resetSchema();
     // Réactivation events sur container pour dessiner
     frozenContainerGrid(false);
@@ -222,8 +215,8 @@ function getCursorPositionOnCanvas(e) {
     const {clientX, clientY} = e;
     // Return position from the origin of canvas
     return { 
-        x: clientX - s.boundingCanvas.left, 
-        y: clientY - s.boundingCanvas.top 
+        x: clientX - s.canvas.left, 
+        y: clientY - s.canvas.top 
     }
 }
 

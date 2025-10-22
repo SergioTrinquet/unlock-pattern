@@ -4,7 +4,6 @@ export const state = {
     root: document.documentElement,
     container: document.querySelector(".container"),
     canvas: document.querySelector("canvas"),
-    boundingCanvas: null,
 
     dots: null,
     capturedDots: [],
@@ -15,7 +14,8 @@ export const state = {
         idxCaptured: []
     }, */
 
-    isTouchScreen: window.matchMedia("(pointer:coarse)").matches,
+    // isTouchScreen: window.matchMedia("(pointer:coarse)").matches,
+    isTouchScreen: window.matchMedia("(pointer:coarse)").matches || navigator.maxTouchPoints > 0,
 
     msg: document.querySelector(".msg"),
 

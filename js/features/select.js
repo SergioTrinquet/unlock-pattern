@@ -27,8 +27,6 @@ async function onChangeSelectNbDots() {
     displaySquaresOnSelectChange(s.selectedValueNbDots); //Squares background qui disparaissent/reapparaissent
     gridModule.resetGrid(); // Réinitialisation
 
-    s.strokeController.abortController?.abort(); // Option avec interruption IMMEDIATE de l'animation sur le Flash de couleur sur le tracé du schéma s'il est présent
-
     /* TEST pour var. réactive: Fonctionne! */rs.isSelectOpen = Number.isInteger(s.selectedValueNbDots) ? true : false; 
 
     if(Number.isInteger(s.selectedValueNbDots)) {

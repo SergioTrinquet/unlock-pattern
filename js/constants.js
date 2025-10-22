@@ -34,12 +34,18 @@ export const STROKES_COLORATION_SEQUENCE = [
     { color: "custom",  duration: 500 },
     { color: "default", duration: 300 },
     { color: "custom",  duration: 2000 }
-]; 
+];
+
+export const SCHEMA_ELEMENTS_COLOR_CLASS = {
+    error: "error",
+    valid: "valid",
+    default: "default"
+}
 export const STROKE = {
     color:{
-        default: "rgb(255, 217, 217)",
-        error: "rgba(255, 94, 94, 1)",
-        valid: "#4dfd4dff"
+        [SCHEMA_ELEMENTS_COLOR_CLASS.default]: "rgb(255, 217, 217)",
+        [SCHEMA_ELEMENTS_COLOR_CLASS.error]: "rgba(255, 94, 94, 1)",
+        [SCHEMA_ELEMENTS_COLOR_CLASS.valid]: "#4dfd4dff"
     },
     width: 6,
 };

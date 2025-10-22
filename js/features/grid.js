@@ -27,10 +27,11 @@ function removeDots() {
     });
 }
 
-function getCanvasSizeAndDotsCoord() {  console.log("%c---getCanvasSizeAndDotsCoord()----", "background-color: yellow; color: black");
+function getCanvasSizeAndDotsCoord() {
     // Get size to canvas in px according to ".container" element
     s.canvas.width = s.canvas.height = s.container.getBoundingClientRect().width;
-    s.boundingCanvas = s.canvas.getBoundingClientRect();
+    s.canvas.top = s.canvas.getBoundingClientRect().top;
+    s.canvas.left = s.canvas.getBoundingClientRect().left;
 
     // Get dots coordonates based on canvas
     s.dotsCoord = [];
@@ -41,10 +42,12 @@ function getCanvasSizeAndDotsCoord() {  console.log("%c---getCanvasSizeAndDotsCo
     s.dots.forEach((dot, i) => {
         const boundingDot = dot.getBoundingClientRect();
         s.dotsCoord.push({
-            "top": boundingDot.top - s.boundingCanvas.top + DotDistanceCenter,
-            "left": boundingDot.left - s.boundingCanvas.left + DotDistanceCenter
+            "top": boundingDot.top - s.canvas.top + DotDistanceCenter,
+            "left": boundingDot.left - s.canvas.left + DotDistanceCenter
         });
     })
+
+    console.log("%c---getCanvasSizeAndDotsCoord()----", "background-color: yellow; color: black", s.canvas, s.dotsCoord);
 }
 
 export function frozenContainerGrid(isActive) {
@@ -75,6 +78,7 @@ export function initGrid() {
 export function resetGrid() {
     removeDots();
     resetSchema();
+    s.strokeController.abortController?.abort(); // Interruption IMMEDIATE de l'animation sur le Flash de couleur sur le tracé du schéma s'il est présent
 
     s.container.removeEventListener('pointermove', isDrawingSchema); // Sert-il ?
     if(s.isTouchScreen) s.container.removeEventListener('pointerdown', releasePointerCaptureOnTouchScreen);

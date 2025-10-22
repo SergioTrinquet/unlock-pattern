@@ -18,7 +18,8 @@ export function handleValidationButtonClick() {
         if(targetId === ID_BUTTON_DRAW_SCHEMA.invalidate) {
             vibrateOnTouch(100);
             s.container.classList.add("vibrate");
-            colorationSchema(true, STROKE.color.error);
+            // colorationSchema(true, STROKE.color.error);
+            colorationSchema(true, "error");
             s.container.addEventListener("animationend", (e) => {
                 if (e.animationName === "vibrate") {
                     s.container.classList.remove("vibrate");

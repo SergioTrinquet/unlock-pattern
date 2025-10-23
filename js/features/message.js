@@ -11,7 +11,6 @@ let buttonsValidationModule = null;
 const animationMsg = getComputedStyles("--animation-msg");
 
 
-
 import { reactiveState as rs } from "../state.js";
 let cookieModule = null; // FAIRE UNE SEULE VAR. GLOBALE DANS 'state.js' CAR EXISTE AUSSI DANS 'select.js'
 rs.watch("isSelectOpen", async newVal => {
@@ -46,10 +45,8 @@ export function displayComplementaryInfos(pm) {   // RETIRER LE EXPORT QUAND FIN
     }
 }
 
-
 export function setComplementaryInfos(calledFromClick) {  
     console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
-    
     const capturedDotsLength = s.capturedDots.length;
     // Qd on vient de sélectionner une Grid et que donc pas de points capturés
     if(!capturedDotsLength) displayComplementaryInfos({text: `${s.recordedSchema ? MSG_LABELS.draw : MSG_LABELS.creation}`, anim: true});
@@ -58,7 +55,7 @@ export function setComplementaryInfos(calledFromClick) {
         const currentSchemaNbDots = s.currentSchemaNbDotsMinMax;
         if(calledFromClick) {
             if(capturedDotsLength < currentSchemaNbDots.nbDotMin) {
-                displayComplementaryInfos({text: `${MSG_LABELS.invalid}${MSG_LABELS.notEnoughPoints}`, className: 'invalid', anim: true});
+                displayComplementaryInfos({text: `${MSG_LABELS.invalid}${MSG_LABELS.notEnoughPoints}`, className: MSG_CSS_CLASS.invalid, anim: true});
                 setTimeout(() => {
                     displayComplementaryInfos({text: MSG_LABELS.creation, anim: true});
                 }, DELAY_TO_DISPLAY.labelAfterNotEnoughDots);
@@ -74,12 +71,12 @@ export function setComplementaryInfos(calledFromClick) {
             capturedDotsLength <= currentSchemaNbDots.nbDotMax && 
             lastMsg !== MSG_LABELS.valid
         ) {    
-            displayComplementaryInfos({text: MSG_LABELS.valid, className: 'valid', anim: true});
+            displayComplementaryInfos({text: MSG_LABELS.valid, className: MSG_CSS_CLASS.valid, anim: true});
             lastMsg = MSG_LABELS.valid;
         } 
 
         if(capturedDotsLength === currentSchemaNbDots.nbDotMax) {
-            displayComplementaryInfos({text: MSG_LABELS.maxPointsReached, className: 'valid', anim: true});  
+            displayComplementaryInfos({text: MSG_LABELS.maxPointsReached, className: MSG_CSS_CLASS.valid, anim: true});  
             setTimeout(() => {
                 displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
                 handleButtonsClick();
@@ -87,7 +84,6 @@ export function setComplementaryInfos(calledFromClick) {
         }
     }
 }
-
 
 async function handleButtonsClick() {
     if(!buttonsValidationModule) {

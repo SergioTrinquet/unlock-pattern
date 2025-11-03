@@ -54,6 +54,8 @@
 
     --svg-dot-color: rgba(255, 255, 255, 0.7);
     --svg-line-color: rgba(255, 255, 255, 0.4);
+
+    --message-top-position: max(6dvh, 40px);
 }
 * { /* Reset */
     margin: 0;
@@ -101,6 +103,15 @@ body {
     &:has(.flip-card.flip-over) {
         pointer-events: none;
     }
+}
+
+button {
+    font-family: "Dosis", sans-serif;
+    font-weight: 600;
+    color: var(--color-font);
+    cursor: pointer;
+    border: none;
+    border-radius: 100px;
 }
 
 .squares-wrapper {
@@ -218,7 +229,7 @@ body {
     font-size: clamp(1rem, 4vmin, 1.5rem);
     color: var(--color-font);
     position: absolute;
-    top: 6vh;
+    top: var(--message-top-position);
     opacity: 1;
     transform: translateY(0);
     transition-duration: 0.5s;
@@ -241,19 +252,13 @@ body {
     }
 
     & button {
-        font-family: "Dosis", sans-serif;
         font-size: clamp(1rem, 2.1dvmin, 1.5rem);
-        font-weight: 600;
-        color: var(--color-font);
-        cursor: pointer;
         background-color: var(--background-container);
         -moz-backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         backdrop-filter: blur(20px);
-        border-radius: 100px;
         margin: 0 0.5rem;
         padding: 0.5rem 1.2rem;
-        border: none;
         transition: background-color .2s ease;
         &:hover {
             background-color: color-mix(in srgb, var(--background-container) 90%, white);
@@ -276,13 +281,12 @@ body {
 }
 
 #deleteSchema {
-    border: none;
+    border: solid 1px var(--color-font);
     background-color: transparent;
     color: var(--color-font);
-    text-decoration: underline;
-    cursor: pointer;
+    padding: 0.1rem 1rem 0.3rem;
     position: absolute;
-    top: 9dvh;
+    top: calc(var(--message-top-position) + 6dvh);
 
     opacity: 0;
     @supports not (transition-behavior: allow-discrete) {
@@ -291,6 +295,7 @@ body {
 
     @supports (transition-behavior: allow-discrete) {
         display: none;
+        margin-top: 2dvh;
         transition-property: opacity display;
         transition-duration: var(--grid-fading-transition-time-in-ms);
         transition-behavior: allow-discrete;
@@ -298,12 +303,32 @@ body {
 
     &.display {
         opacity: 1;
+        margin-top: 0dvh;
 
         @supports (transition-behavior: allow-discrete) {
             display: block;
             @starting-style {
                 opacity: 0;
+                margin-top: 2dvh;
             }
+        }
+    }
+
+    overflow: clip;
+    &:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        background-color: var(--color-font);
+        left: -100%;
+        transition: left 0.2s ease;
+        z-index: -1;
+    }
+    &:hover {
+        color: var(--background-screen-from);
+        &:before {
+            left: 0;
         }
     }
 }

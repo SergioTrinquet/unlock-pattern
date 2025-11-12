@@ -53,5 +53,21 @@ export const STROKE = {
 
 export const DELAY_TO_DISPLAY = {
     labelAfterNotEnoughDots: 2000,
-    buttonsAfterValidSchema: 1500
+    buttonsAfterValidSchema: 1500,
+    labelAfterInvalidSchema: 2000
 }
+
+export const NB_SQUARES_PER_COLUMN = 10;
+// Tracés (chaque entrée = un schéma différent)
+export const STRIKE_PATTERNS_PATH = [
+  "M40 40 L100 40 L100 100 L100 160 L160 160",
+  "M160 100 L160 40 L100 100 L40 100 L40 160",
+  "M100 160 L160 160 L160 100 L100 100 L100 40 L160 40",
+  "M40 40 L40 100 L100 100 L160 100 L160 160",
+  "M40 160 L100 100 L160 100 L160 40 L100 40",
+  "M160 40 L160 100 L100 100 L100 160 L40 160",
+  "M40 160 L100 160 L100 100 L100 40 L40 40",
+  "M160 40 L160 100 L100 160 L40 100 L40 40",
+  "M40 40 L100 100 L160 160 L100 160 L40 160",
+  "M160 40 L100 100 L40 160 L100 160 L160 160"
+];

@@ -590,17 +590,17 @@ canvas {
     }
 }
 
-@keyframes scroll-up  {
+@keyframes scroll-up {
     100% {
         transform: translate(0, -50%);
     }
 }
-@keyframes scroll-down  {
+@keyframes scroll-down {
     100% {
         transform: translate(0, 50%);
     }
 }
-@keyframes hidden-scroll-up  {
+@keyframes hidden-scroll-up {
     10% {
         opacity: 1;
     }
@@ -609,7 +609,7 @@ canvas {
         opacity: 0;
     }
 }
-@keyframes hidden-scroll-down  {
+@keyframes hidden-scroll-down {
     10% {
         opacity: 1;
     }

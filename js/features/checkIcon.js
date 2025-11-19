@@ -10,7 +10,7 @@ const svgCheck = {
     }
 
 // Pour établir la couleur de l'icône SVG check
-export function svgSchemaInit() {
+export function initSvg() {
     svgDoc = svgIconCheckObj.contentDocument;
     if(!svgDoc) return;
 
@@ -26,7 +26,7 @@ export function svgSchemaInit() {
 };
 
 // Cloning pour réinitialiser à chaque fois l'anim
-export function initSVGcheckAnimation() {
+export function resetSvgAnimation() {
     const SVGanimateTags = [
         {svgTag: svgCheck.circle, svgTagAnimation: svgDoc.getElementById("animCircleCheckIcon")},  
         {svgTag: svgCheck.smallLine, svgTagAnimation: svgDoc.getElementById("animSmallLineCheckIcon")},
@@ -41,7 +41,7 @@ export function initSVGcheckAnimation() {
     });
 }
 
-export function startSVGcheckAnimation() {
+export function startSvgAnimation() {
     // const delayTransitionFlippingCard = getComputedStyles("--time-transition-flipping-card");
     // svgDoc.getElementById("animCircleCheckIcon")..beginElementAt(delayTransitionFlippingCard);
     svgDoc.getElementById("animCircleCheckIcon").beginElement();

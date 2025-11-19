@@ -1,9 +1,15 @@
 import { createEl } from "../core/utils.js";
 import { goBackToStartStep } from "./select.js";
-import { svgSchemaInit, initSVGcheckAnimation, startSVGcheckAnimation } from "./checkIcon.js";
+import { initSvg, resetSvgAnimation, startSvgAnimation } from "./checkIcon.js";
 
 const flipCard = document.querySelector(".flip-card");
 const flipCardBackChild = document.querySelector(".flip-card-back > div");
+const SEQUENCE = {
+    stepCardFlip: 600,
+    stepAnimSVG: 1300,
+    stepDisplayMsgSuccess: 1000,
+    stepDelayBeforeMsgSuccessClose: 4000
+};
 
 /* VERSION ORIGINALE : Fonctionne !!! */ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 /* V2 TEST */
@@ -27,23 +33,17 @@ const flipCardBackChild = document.querySelector(".flip-card-back > div");
 } */
 /* FIN V2 TEST */
 
-export async function runSequenceSchemaValid() {
-    const SEQUENCE = {
-        stepCardFlip: 600,
-        stepAnimSVG: 1300,
-        stepDisplayMsgSuccess: 1000,
-        stepDelayBeforeMsgSuccessClose: 4000
-    };
 
-   svgSchemaInit();
+export async function runSequenceSchemaValid() {
+    initSvg();
    
     // Étape 1
     flipCard.classList.toggle("flip-over", true);
-    initSVGcheckAnimation();
+    resetSvgAnimation();
     await wait(SEQUENCE.stepCardFlip);
 
     // Étape 2
-    startSVGcheckAnimation();
+    startSvgAnimation();
     await wait(SEQUENCE.stepAnimSVG);
 
     // Étape 3

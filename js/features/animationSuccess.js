@@ -2,6 +2,7 @@ import { createEl } from "../core/utils.js";
 import { goBackToStartStep } from "./select.js";
 import { initSvg, resetSvgAnimation, startSvgAnimation } from "./checkIcon.js";
 
+const jsConfetti = new JSConfetti();
 const flipCard = document.querySelector(".flip-card");
 const flipCardBackChild = document.querySelector(".flip-card-back > div");
 const SEQUENCE = {
@@ -61,6 +62,8 @@ export async function runSequenceSchemaValid() {
     goBackToStartStep();
     flipCard.classList.toggle("flip-over", false);
     flipCardBackChild.classList.toggle("grow-after-flip-over", false);
+
+    jsConfetti.addConfetti();
 
     messageSuccess.addEventListener("click", () => { 
         messageSuccess.classList.add("up");

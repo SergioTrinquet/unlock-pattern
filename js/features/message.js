@@ -6,7 +6,9 @@ const buttonsRecordSchema = `
 <button id="${ID_BUTTON_DRAW_SCHEMA.invalidate}">Refaire un schéma</button>
 <button id="${ID_BUTTON_DRAW_SCHEMA.validate}">Valider ce schéma</button>
 `;
-let lastMsg = "";
+let schemaValidityModule = null;
+let messageTimeout = null;
+let previousInfoText = null;
 let buttonsValidationModule = null;
 const animationMsg = getComputedStyles("--animation-msg");
 
@@ -31,7 +33,10 @@ export function removeComplementaryInfos() {
 }
 
 export function displayComplementaryInfos(pm) {   // RETIRER LE EXPORT QUAND FINI   
-    //console.log(pm, pm.className, "!!pm.className => ", !!pm.className, pm.anim); //TEST
+    // console.log(pm, pm.className, "!!pm.className => ", !!pm.className, pm.anim); //TEST
+    if(pm.text === previousInfoText) return;
+    previousInfoText = pm.text;
+
     const flagAnimation = !!pm.anim;  
     let msg = s.msg;
     if(flagAnimation) {
@@ -45,39 +50,47 @@ export function displayComplementaryInfos(pm) {   // RETIRER LE EXPORT QUAND FIN
     }
 }
 
-export function setComplementaryInfos(calledFromClick) {  
-    console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
+
+// export function setComplementaryInfos(calledFromClick) {  
+export async function setComplementaryInfos(calledFromClick) {  
+    // console.log("Dans 'setComplementaryInfos > calledFromClick': ", calledFromClick); //TEST
+    clearTimeout(messageTimeout);
     const capturedDotsLength = s.capturedDots.length;
+    const currentSchemaNbDots = s.currentSchemaNbDotsMinMax;
     // Qd on vient de sélectionner une Grid et que donc pas de points capturés
     if(!capturedDotsLength) displayComplementaryInfos({text: `${s.recordedSchema ? MSG_LABELS.draw : MSG_LABELS.creation}`, anim: true});
 
-    if(!s.recordedSchema) {   //console.log("Pas de schéma enregistré !!","s.capturedDots.length: " , s.capturedDots.length, "| currentSchemaNbDotsMinMax.nbDotMin: ", s.currentSchemaNbDotsMinMax.nbDotMin, " | currentSchemaNbDotsMinMax.nbDotMax: ", s.currentSchemaNbDotsMinMax.nbDotMax); //TEST
-        const currentSchemaNbDots = s.currentSchemaNbDotsMinMax;
-        if(calledFromClick) {
+    if(!schemaValidityModule) schemaValidityModule = await import("./schemaValidity.js");
+    const isSchemaValid = schemaValidityModule.checkSchemaValidity();
+
+
+    if(calledFromClick) {
+        if(!s.recordedSchema) {
+            if(isSchemaValid) {
+            displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
+            handleButtonsClick();
+            }
             if(capturedDotsLength < currentSchemaNbDots.nbDotMin) {
                 displayComplementaryInfos({text: `${MSG_LABELS.invalid}${MSG_LABELS.notEnoughPoints}`, className: MSG_CSS_CLASS.invalid, anim: true});
-                setTimeout(() => {
+                messageTimeout = setTimeout(() => {
                     displayComplementaryInfos({text: MSG_LABELS.creation, anim: true});
                 }, DELAY_TO_DISPLAY.labelAfterNotEnoughDots);
             }
-            if(capturedDotsLength >= currentSchemaNbDots.nbDotMin && capturedDotsLength <= currentSchemaNbDots.nbDotMax) {
-                displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
-                handleButtonsClick();
+        } else {
+            if(!isSchemaValid) {
+            displayComplementaryInfos({text: MSG_LABELS.invalid, className: MSG_CSS_CLASS.invalid, anim: true});
+            messageTimeout = setTimeout(() => { displayComplementaryInfos({text: MSG_LABELS.draw, anim: true}) }, DELAY_TO_DISPLAY.labelAfterInvalidSchema);
             }
         }
-        // Msgs 'Schéma valide'
-        if(
-            capturedDotsLength >= currentSchemaNbDots.nbDotMin && 
-            capturedDotsLength <= currentSchemaNbDots.nbDotMax && 
-            lastMsg !== MSG_LABELS.valid
-        ) {    
-            displayComplementaryInfos({text: MSG_LABELS.valid, className: MSG_CSS_CLASS.valid, anim: true});
-            lastMsg = MSG_LABELS.valid;
-        } 
+    }
 
+    if(!s.recordedSchema && !calledFromClick) {
+        if(isSchemaValid) {
+            displayComplementaryInfos({text: MSG_LABELS.valid, className: MSG_CSS_CLASS.valid, anim: true});
+        }
         if(capturedDotsLength === currentSchemaNbDots.nbDotMax) {
             displayComplementaryInfos({text: MSG_LABELS.maxPointsReached, className: MSG_CSS_CLASS.valid, anim: true});  
-            setTimeout(() => {
+            messageTimeout = setTimeout(() => {
                 displayComplementaryInfos({text: buttonsRecordSchema, anim: true});
                 handleButtonsClick();
             }, DELAY_TO_DISPLAY.buttonsAfterValidSchema);
